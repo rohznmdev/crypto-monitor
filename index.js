@@ -45,8 +45,8 @@ const displayPrice = async (crypto) => {
 
 const displayChoices = async (answer) => {
   if (answer === "O" || answer === "o") {
-    console.log("Press E to exit");
     console.log("Press S to show 50 crypto ID's");
+    console.log("Press E to exit");
     readline.question("Pick an option. \n", (answer) => {
       options(answer);
     });
