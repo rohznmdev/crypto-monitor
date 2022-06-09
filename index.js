@@ -1,57 +1,84 @@
-//simple ethereum and bitcoin price monitor
+"use-strict";
+const { sendWebhook } = require("./discord.js");
+const { getAnalytics } = require("./price.js");
+const { getOptions } = require("./options.js");
+const { SystemChannelFlags } = require("discord.js");
+const { read } = require("fs");
+const readline = require("readline").createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-const axios = require('axios');
-const cheerio = require('cheerio');
+const displayPrice = async (crypto) => {
+  const info = await getAnalytics(crypto);
+  console.log("Crypto Price Monitor");
+  console.log();
+  console.log(
+    "Crypto Name: " +
+      info.name +
+      "   Date: " +
+      new Date().toLocaleDateString() +
+      "      Time: " +
+      new Date().toLocaleTimeString()
+  );
+  console.log(
+    "Price:       $" +
+      info.price +
+      "   24H High: $" +
+      info.hourHigh +
+      "  24H Low: $" +
+      info.hourLow
+  );
+  console.log(
+    "ATH:         $" +
+      info.allTime +
+      "   ATH Change:  " +
+      info.allTimeChange +
+      "%"
+  );
 
-const getETH = async () => {
-	try {
-		const { data } = await axios.get(
-			"https://ethereumprice.org/"
-		);
-		const $ = cheerio.load(data);
-		const ethPrice = [];
+  console.log();
+  console.log("Developed by Rohan Mathew.");
 
-		$('#coin-price > span.value').each((_idx, el) => {
-			const elETH = $(el).text()
-			ethPrice.push(elETH)
-		});
-
-		return ethPrice;
-	} catch (error) {
-		throw error;
-	}
+  sendWebhook(info);
 };
 
-const getBTC = async() => {
-	try {
-		const { data } = await axios.get(
-			"https://coinmarketcap.com/currencies/bitcoin/"
-		);
-		const $ = cheerio.load(data);
-		const btcPrice = [];
-
-		$('#__next > div > div > div.sc-57oli2-0.comDeo.cmc-body-wrapper > div > div.sc-16r8icm-0.eMxKgr.container > div.n78udj-0.jskEGI > div > div.sc-16r8icm-0.kjciSH.priceSection > div.sc-16r8icm-0.kjciSH.priceTitle > div').each((idx,el) => {
-			const elBTC = $(el).text()
-			btcPrice.push(elBTC)
-		});
-
-		return btcPrice;
-	} catch (error) {
-		throw error;
-	}
+const displayChoices = async (answer) => {
+  if (answer === "O" || answer === "o") {
+    console.log("Press E to exit");
+    console.log("Press S to show 50 crypto ID's");
+    readline.question("Pick an option. \n", (answer) => {
+      options(answer);
+    });
+  } else {
+    displayPrice(answer);
+    readline.close();
+  }
 };
 
-const today = new Date();
-const date = (today.getMonth()+1)+'-'+today.getDate()+'-'+today.getFullYear();
-const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-
-const callFunc = async() => {
-	
-	console.log(`The current date is ${date} and the current time is ${time}`)
-	getBTC()
-	.then((btcPrice) => console.log(`The current price of Bitcoin is ${btcPrice}.`))
-	getETH()
-	.then((ethPrice) => console.log(`The current price of Ethereum is $${ethPrice}.`))
+const options = async (answer) => {
+  if (answer === "E" || answer === "e") {
+    console.log("Goodbye!");
+    process.exit(1);
+  } else if (answer === "S" || answer === "s") {
+    console.log("Displaying 50 crypto ID's.");
+    await getOptions();
+    promptUser();
+  }
 };
 
-callFunc()
+const promptUser = async () => {
+  readline.question(
+    "What crypto would you like to see? Press o for options. \n",
+    (answer) => {
+      displayChoices(answer);
+    }
+  );
+  return true;
+};
+
+const flow = async () => {
+  let finish = await promptUser();
+};
+
+flow();
