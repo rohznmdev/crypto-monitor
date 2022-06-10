@@ -3,7 +3,6 @@ const { sendWebhook } = require("./discord.js");
 const { getAnalytics } = require("./price.js");
 const { getOptions } = require("./options.js");
 const { SystemChannelFlags } = require("discord.js");
-const { read } = require("fs");
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout,

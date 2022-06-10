@@ -4,7 +4,7 @@ const { MessageEmbed, WebhookClient } = require("discord.js");
 
 const webhookClient = new WebhookClient({
   url:
-    "https://discord.com/api/webhooks/906928197562687519/U5YPei2Y6dr77BhGlYNsReHC1-YzeqY417yCouUceEOCpl2lSwBCZCrXIgoFDk1LoKQO",
+    "your-discord-webhook-url",
 });
 
 const pickColor = async (info) => {
