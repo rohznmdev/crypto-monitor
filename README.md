@@ -1,2 +1,2 @@
 # crypto-monitor
-Simple Bitcoin and Ethereum price monitor.
+Simple Cryptocurrency price monitor.
